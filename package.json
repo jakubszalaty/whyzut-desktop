@@ -1,26 +1,20 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "whyzut-desktop",
+  "version": "0.6.2",
+  "description": "Desktop app for edziekanat.zut.edu.pl",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/nnaisur/whyzut-desktop",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "wizut",
+    "zut"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Jakub Szalaty",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^1.4.1"
-  },
-  "dependencies": {
-    "es-collections": "0.0.2",
-    "pathfinding": "^0.4.18"
   }
 }
