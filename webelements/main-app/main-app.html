@@ -278,16 +278,20 @@
 
     <app-location use-hash-as-path route="{{route}}"></app-location>
     <app-route
-    route="{{route}}"
-    pattern="/:page"
-    data="{{routeData}}"
-    tail="{{subroute}}">
-  </app-route>
+      route="{{route}}"
+      pattern="/:page"
+      data="{{routeData}}"
+      tail="{{subroute}}">
+    </app-route>
+    <!-- <app-route
+      route="{{subroute}}"
+      pattern="/:subject"
+      data="{{subrouteData}}">
+    </app-route> -->
 
   <paper-toast class="fit-bottom" id="updatedData" duration="0" text="[[toastText]]">
     <paper-button onclick="updatedData.toggle()" class="yellow-button">Ok</paper-button>
   </paper-toast>
-
   <!-- <app-scrollpos-control selected="{{activeSelected}}"></app-scrollpos-control> -->
   <app-drawer-layout>
 
@@ -308,16 +312,20 @@
         </app-header>
 
         <!-- nav menu -->
-        <paper-listbox attr-for-selected="route" selected="{{route.path}}"  on-iron-activate="_drawerSelected">
-          <paper-item route="/main" disabled="[[!user.logged]]">
+        <paper-listbox attr-for-selected="route" selected="{{routeData.page}}"  on-iron-activate="_drawerSelected">
+          <paper-item route="main" disabled="[[!user.logged]]">
             <paper-icon-button noink icon="list"></paper-icon-button>
             Plan
           </paper-item>
-          <paper-item route="/settings">
+          <paper-item route="exams">
+            <paper-icon-button noink icon="assignment-late"></paper-icon-button>
+            Egzaminy
+          </paper-item>
+          <paper-item route="settings">
             <paper-icon-button noink icon="settings"></paper-icon-button>
             Ustawienia
           </paper-item>
-          <paper-item route="/about">
+          <paper-item route="about">
             <paper-icon-button noink icon="info"></paper-icon-button>
             O mnie
           </paper-item>
@@ -327,8 +335,8 @@
     </app-drawer>
 
     <app-header-layout>
-      <neon-animated-pages id="mainPages" attr-for-selected="route" selected="{{route.path}}">
-        <div route="/main" >
+      <neon-animated-pages id="mainPages" attr-for-selected="route" selected="{{routeData.page}}">
+        <div route="main" >
 
           <!-- <app-header condenses effects="waterfall" fixed> -->
           <app-header fixed>
@@ -404,9 +412,10 @@
               </iron-swipeable-page>
             </iron-swipeable-pages>
           </div>
+
         </div>
 
-        <div route="/settings">
+        <div route="settings">
 
           <app-header condenses effects="waterfall" fixed>
             <app-toolbar>
@@ -424,9 +433,24 @@
 
           </div>
         </div>
+        <div route="exams">
+
+          <app-header condenses effects="waterfall" fixed>
+            <app-toolbar>
+              <paper-icon-button noink icon="menu" drawer-toggle></paper-icon-button>
+              <div main-title> Egzaminy  </div>
+            </app-toolbar>
+            <paper-progress class="progress-bar" indeterminate bottom-item hidden$="[[!lodingData]]"></paper-progress>
+
+          </app-header>
+
+          <div class="content" style="padding:0;">
+            <paper-card-repeater exam="true"></paper-card-repeater>
+          </div>
+        </div>
 
 
-        <div class="about" route="/about">
+        <div route="about" class="about">
 
           <app-header effects="waterfall resize-title blend-background parallax-background" condenses reveals>
             <app-toolbar>
@@ -502,7 +526,7 @@
                     <div class="primary">
                       Wersja
                     </div>
-                    <div class="secondary dim">0.6.2</div>
+                    <div class="secondary dim">0.7.5</div>
                   </div>
                 </div>
                 <div class="border"></div>
@@ -544,10 +568,10 @@
         type: Number,
         value: function(){
           // wyjatek na niedziele
-          var weekDay = new Date().getDay()-1;
+          var weekDay = new Date().getDay()-1
           if(weekDay==-1)
-            weekDay=6;
-          return weekDay;
+            weekDay=6
+          return weekDay
         }
       },
       range:{
@@ -565,115 +589,114 @@
     },
 
     attached: function(){
-      var self = this;
-      self.refreshLastUpdate();
+      var self = this
+      self.refreshLastUpdate()
 
       // aby aktualizowalo sie co minute
       setInterval(function(){
-        self.refreshLastUpdate();
-      },60 * 1000);
+        self.refreshLastUpdate()
+      },60 * 1000)
 
       if(!self.user.logged)
-        return self.set('route.path','/settings');
+        return self.set('route.path','/settings')
 
       if(!self.route.path)
-        return self.set('route.path','/main');
+        return self.set('route.path','/main')
 
     },
     refreshLastUpdate: function(){
-      this.set('lastUpdate', this.getLastUpdate(this.user.lastCheck));
+      this.set('lastUpdate', this.getLastUpdate(this.user.lastCheck))
     },
     toastMsg: function(text){
       if(!text)
-        return;
-      this.set('toastText',text);
-      this.$.updatedData.open();
+        return
+      this.set('toastText',text)
+      this.$.updatedData.open()
     },
 
     observers: [
-    '_routePathChanged(route.path)',
-    '_dateChanged(currentDate)'
+      '_routePathChanged(route.path)',
+      '_dateChanged(currentDate)'
     ],
     _moveToToday: function(){
-      this.currentDate = new Date();
+      this.currentDate = new Date()
       // wyjatek na niedziele
-      var weekDay = new Date().getDay()-1;
+      var weekDay = new Date().getDay()-1
       if(weekDay==-1)
-        weekDay=6;
-      this.activeSelected = weekDay;
+        weekDay=6
+      this.activeSelected = weekDay
     },
     getLastUpdate: function(lastCheck){
       if(lastCheck)
-        return moment(lastCheck).fromNow();
+        return moment(lastCheck).fromNow()
       else
-        return "";
+        return ''
     },
 
     _getFormatedCurrentDate: function(currentDate,activeSelected){
 
-      var date = moment(currentDate).startOf('week').add(parseInt(activeSelected),'day').format('DD.MM.YY');
-      return date;
+      var date = moment(currentDate).startOf('week').add(parseInt(activeSelected),'day').format('DD.MM.YY')
+      return date
 
     },
 
     _routePathChanged: function(path) {
       // resize kalendarza
-      this.$.datePickerOuter.querySelector('paper-date-picker')._resizeHandler();
+      this.$.datePickerOuter.querySelector('paper-date-picker')._resizeHandler()
 
     },
 
     _drawerSelected: function() {
-      if (!this.$.drawer.persistent) this.$.drawer.close();
+      if (!this.$.drawer.persistent) this.$.drawer.close()
     },
 
     _refreshData: function() {
-      app.updateUserData();
+      app.updateUserData()
     },
 
     _toggleDatapicker: function(){
-      this._datapickerVisible = this.$.datePickerOuter.classList.toggle('open');
+      this._datapickerVisible = this.$.datePickerOuter.classList.toggle('open')
       if(this._datapickerVisible){
-        var height = this.$.datePickerOuter.querySelector('paper-date-picker').clientHeight;
-        this.$.datePickerOuter.style.height = height + 'px';
-        this.$.swipePages.classList.add('shadow');
+        var height = this.$.datePickerOuter.querySelector('paper-date-picker').clientHeight
+        this.$.datePickerOuter.style.height = height + 'px'
+        this.$.swipePages.classList.add('shadow')
       }else{
-        this.$.datePickerOuter.style.height = "";
-        this.$.swipePages.classList.remove('shadow');
+        this.$.datePickerOuter.style.height = ''
+        this.$.swipePages.classList.remove('shadow')
       }
     },
     _dateChanged: function(){
-      var self = this;
+      var self = this
       if(self.$.datePickerOuter.classList.contains('open')){
-          // -1 bo zwraca 1-7
-          var weekDay = self.currentDate.getDay()-1;
-          // wyjatek na niedziele
-          if(weekDay==-1)
-            weekDay=6;
+        // -1 bo zwraca 1-7
+        var weekDay = self.currentDate.getDay()-1
+        // wyjatek na niedziele
+        if(weekDay==-1)
+          weekDay=6
 
+        self.$.datePickerOuter.style.height = ''
+        self.$.swipePages.classList.remove('shadow')
+        self.$.swipePages.classList.add('disabled-anim')
+        self.$.swipePages.select(weekDay)
+        this.$.datePickerOuter.classList.remove('open')
+        self._datapickerVisible = false
+        setTimeout(function(){
+          self.$.swipePages.classList.remove('disabled-anim')
+        },10)
 
-
-          self.$.datePickerOuter.style.height = "";
-          self.$.swipePages.classList.remove('shadow');
-          self.$.swipePages.classList.add('disabled-anim');
-          self.$.swipePages.select(weekDay);
-          self._datapickerVisible = false;
-          setTimeout(function(){
-            self.$.swipePages.classList.remove('disabled-anim');
-          },10);
-
-        }
-      },
-      _isVisibleSchedule: function(logged, path){
-        return (logged && path == '/main');
-      },
-      initializeDefaultUserInfo: function(){
-        this.user = {
-          name: "Niezalogowany",
-          logged: false,
-          lastCheck: null
-        };
       }
-    });
+    },
+    _isVisibleSchedule: function(logged, path){
+      return (logged && path == '/main')
+    },
+    initializeDefaultUserInfo: function(){
+      this.user = {
+        name: 'Niezalogowany',
+        logged: false,
+        lastCheck: null
+      }
+    }
+  })
 
   </script>
 

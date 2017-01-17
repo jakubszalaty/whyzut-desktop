@@ -26,13 +26,16 @@
   <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
 
   <!-- Web Components -->
-  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-  <script type="text/javascript" src="bower_components/moment/moment.js"></script>
-  <script type="text/javascript" src="bower_components/moment/min/moment-with-locales.js"></script>
-  <script type="text/javascript" src="bower_components/moment/locale/pl.js"></script>
-  <link rel="import" href="webelements/main-app/main-app.html">
+  <script type="text/javascript" src="./dist/webcomponents-lite.js"></script>
+  <script type="text/javascript" src="./dist/moment.js"></script>
+  <script type="text/javascript" src="./dist/moment-with-locales.js"></script>
+  <script type="text/javascript" src="./dist/pl.js"></script>
+
+  <link rel="import" href="dist/main-app.html">
+  <!-- <link rel="import" href="webelements/main-app/main-app.html"> -->
 
   <link rel="stylesheet" type="text/css" href="css/index.css" />
+
 
   <style>
     body {
@@ -46,7 +49,7 @@
   <main-app></main-app>
 
   <script>
-    window.$ = window.jQuery = require('./bower_components/jquery/dist/jquery.js')
+    window.$ = window.jQuery = require('./dist/jquery.js')
   </script>
   <script type="text/javascript" src="./js/index.js"></script>
   <script type="text/javascript">

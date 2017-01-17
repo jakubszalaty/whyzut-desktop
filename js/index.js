@@ -1,9 +1,23 @@
+
 var app = {
   // Application Constructor
   initialize: function() {
-    this.onDeviceReady()
+    this.bindEvents()
   },
+  // Bind Event Listeners
+  //
+  // Bind any events that are required on startup. Common events are:
+  // 'load', 'deviceready', 'offline', and 'online'.
+  bindEvents: function() {
+    document.addEventListener('deviceready', this.onDeviceReady, false)
+  },
+  // deviceready Event Handler
+  //
+  // The scope of 'this' is the event. In order to call the 'receivedEvent'
+  // function, we must explicitly call 'app.receivedEvent(...)'
   onDeviceReady: function() {
+
+    // app.receivedEvent('deviceready')
     var connect = document.querySelector('#connect')
     var clear = document.querySelector('#clear')
 
@@ -25,7 +39,17 @@ var app = {
     }
 
 
+    app.setupStatusBar()
 
+    navigator.splashscreen.hide()
+
+    // app.setupPush()
+
+
+  },
+  setupStatusBar: function() {
+
+    StatusBar.backgroundColorByHexString('#303F9F')
 
   },
   updateUserData: function(moveToSchedule){
@@ -96,7 +120,7 @@ var app = {
           keys = ['date', 'startTime', 'endTime', 'room', 'subject', 'formName', 'teacher', 'teacherSchedule', 'roomState']
 
           var elements = []
-
+          let id = 1
           $table.find('.gridDane').map(function(elemIndex){
             var elem = $(this)
             var obj = {}
@@ -108,10 +132,11 @@ var app = {
 
             })
             var date = obj.date.split(' ')
+            obj.id = id++
             obj.date = date[0]
             obj.dayName = date[1]
             var color = elem.children()[0].style.color
-            console.log(color)
+            // console.log(color)
             if(color === 'rgb(0, 0, 255)')
               obj.status = 'e'
             else if(color === 'rgb(255, 0, 0)')
@@ -160,5 +185,57 @@ var app = {
 
 
   },
-}
+  // Update DOM on a Received Event
+  receivedEvent: function(id) {
+    console.log('Received Event: ' + id)
+  },
+  setupPush: function() {
+    var push = PushNotification.init({
+      'android': {
+        'senderID': 'XXXXXX'
+      }
+    })
 
+    push.on('registration', function(data) {
+      console.log('registration event: ' + data.registrationId)
+
+      var oldRegId = localStorage.getItem('registrationId')
+      if (oldRegId !== data.registrationId) {
+        // Save new registration ID
+        localStorage.setItem('registrationId', data.registrationId)
+        // Post registrationId to your app server as the value has changed
+      }
+    })
+    push.on('error', function(e) {
+      console.log('push error = ' + e.message)
+    })
+
+    push.on('notification', function(data) {
+      console.log('notification event')
+      navigator.notification.confirm(
+        'Chcesz pobrać najnowszą wersje aplikacji?',
+        function(buttonIndex) {
+          if (buttonIndex === 1) {
+            window.open(data.additionalData.url,'_system')
+          }
+        },
+        'Dostępna aktualizacja',
+        ['Pobierz','Później']
+      )
+      // navigator.notification.alert(
+      //    data.message,         // message
+      //    null,                 // callback
+      //    data.title,           // title
+      //    'Ok'                  // buttonName
+      // )
+
+    })
+
+    push.finish(function() {
+      console.log('success')
+    }, function() {
+      console.log('error')
+    })
+
+  }
+}
