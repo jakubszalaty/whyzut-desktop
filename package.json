@@ -4,7 +4,8 @@
   "description": "Desktop app for edziekanat.zut.edu.pl",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "gulp"
   },
   "repository": "https://github.com/nnaisur/whyzut-desktop",
   "keywords": [
@@ -15,6 +16,7 @@
   "author": "Jakub Szalaty",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.4.1"
+    "electron": "^1.4.1",
+    "gulp-vulcanize": "^6.1.0"
   }
 }

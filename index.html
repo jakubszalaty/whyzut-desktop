@@ -27,12 +27,14 @@
 
   <!-- Web Components -->
   <script type="text/javascript" src="./dist/webcomponents-lite.js"></script>
-  <script type="text/javascript" src="./dist/moment.js"></script>
-  <script type="text/javascript" src="./dist/moment-with-locales.js"></script>
-  <script type="text/javascript" src="./dist/pl.js"></script>
+  <!--<script type="text/javascript" src="./dist/moment.js"></script>-->
+  <!--<script type="text/javascript" src="./dist/pl.js"></script>-->
 
-  <link rel="import" href="dist/main-app.html">
-  <!-- <link rel="import" href="webelements/main-app/main-app.html"> -->
+  <script type="text/javascript" src="./dist/moment-with-locales.js"></script>
+  <script type="text/javascript"> moment.locale('pl') </script>
+
+  <!--<link rel="import" href="dist/main-app.html">-->
+   <link rel="import" href="webelements/main-app/main-app.html">
 
   <link rel="stylesheet" type="text/css" href="css/index.css" />
 
